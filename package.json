@@ -4,12 +4,14 @@
   "description": "E-Commerce for contribution",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.9",
+    "ejs-mate": "^4.0.0",
     "express": "^4.18.2",
     "mongoose": "^8.0.1"
   }
