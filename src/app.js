@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 
 //Routes
 const productRoutes = require('./routes/productRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
@@ -15,6 +16,7 @@ app.use(express.json({ parameterLimit: 5000, limit: '10mb' }));
 app.use(methodOverride('_method'));
 
 app.use(productRoutes);
+app.use(reviewRoutes);
 
 module.exports = app;
 
