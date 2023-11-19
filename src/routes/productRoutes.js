@@ -35,6 +35,18 @@ router.delete('/products/:id', async (req, res) => {
     await Product.findByIdAndDelete(id);
     res.redirect('/products');
 })
+// edit route
+router.get('/products/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('products/edit', { product});
+})
 
+// update
+router.patch('/products/:id', async (req, res) => {
+    const { id } = req.params;
+await Product.findByIdAndUpdate(id,{...req.body})
+res.redirect('/products');
+})
 module.exports = router;
 
