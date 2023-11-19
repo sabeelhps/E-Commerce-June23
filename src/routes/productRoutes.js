@@ -29,25 +29,26 @@ router.get('/products/:id', async (req, res) => {
 });
 
 // Write edit route yourself
+// edit route
+router.get('/products/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('products/edit', { product });
+});
+
+// update
+router.patch('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, price, desc, imageUrl } = req.body;
+    await Product.findByIdAndUpdate(id, { name, price, desc, imageUrl });
+    res.redirect('/products');
+});
 
 // Delete 
 router.delete('/products/:id', async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id);
     res.redirect('/products');
-})
-// edit route
-router.get('/products/:id/edit', async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    res.render('products/edit', { product});
-})
-
-// update
-router.patch('/products/:id', async (req, res) => {
-    const { id } = req.params;
-await Product.findByIdAndUpdate(id,{...req.body})
-res.redirect('/products');
 })
 module.exports = router;
 
