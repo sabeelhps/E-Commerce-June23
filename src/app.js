@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
+const { NotFoundError, BadRequestError } = require('./core/ApiError');
 
 //Routes
 const productRoutes = require('./routes/productRoutes');
@@ -17,6 +18,14 @@ app.use(methodOverride('_method'));
 
 app.use(productRoutes);
 app.use(reviewRoutes);
+
+app.all('*',(req, res, next)=> next(new NotFoundError('You are requesting a wrong path.')))
+
+// custom error handling middleware
+app.use((err, req, res, next) => {
+    const { status = 500, message = 'Internal Server Error' } = err;
+    res.status(status).render('error', { message });
+});
 
 module.exports = app;
 

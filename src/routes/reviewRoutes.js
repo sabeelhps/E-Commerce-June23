@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Review = require('../models/Review');
 const Product = require('../models/Product');
+const catchAsync = require('../core/catchAsync');
 
-router.post('/products/:id/reviews', async (req, res) => {
+router.post('/products/:id/reviews', catchAsync(async (req, res) => {
     const { id } = req.params;
     const { rating, comment } = req.body;
     const review = new Review({ rating, comment });
@@ -12,6 +13,6 @@ router.post('/products/:id/reviews', async (req, res) => {
     await review.save();
     await product.save();
     res.redirect(`/products/${id}`);
-});
+}));
 
 module.exports = router;
