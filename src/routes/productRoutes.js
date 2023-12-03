@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require('../models/Product');
 const catchAsync = require('../core/catchAsync');
 const { BadRequestError } = require('../core/ApiError');
+const { isLoggedIn } = require('../middleware/auth');
 
 // Get all products
 router.get('/products', catchAsync(async (req, res) => {
@@ -11,12 +12,12 @@ router.get('/products', catchAsync(async (req, res) => {
 }));
 
 // Show new form
-router.get('/products/new', (req, res) => {
+router.get('/products/new',isLoggedIn, (req, res) => {
     res.render('products/new');
 });
 
 // Create
-router.post('/products',catchAsync(async (req, res) => {
+router.post('/products',isLoggedIn, catchAsync(async (req, res) => {
     const { name, imageUrl, desc, price } = req.body;
     await Product.create({ name, imageUrl, desc, price });
     res.redirect('/products');
@@ -35,7 +36,7 @@ router.get('/products/:id',catchAsync(async (req, res) => {
 
 // Write edit route yourself
 // edit route
-router.get('/products/:id/edit', catchAsync(async (req, res) => {
+router.get('/products/:id/edit',isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     if (!product) {
@@ -45,7 +46,7 @@ router.get('/products/:id/edit', catchAsync(async (req, res) => {
 }));
 
 // update
-router.patch('/products/:id', catchAsync(async (req, res) => {
+router.patch('/products/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const { name, price, desc, imageUrl } = req.body;
     await Product.findByIdAndUpdate(id, { name, price, desc, imageUrl });
@@ -53,7 +54,7 @@ router.patch('/products/:id', catchAsync(async (req, res) => {
 }));
 
 // Delete 
-router.delete('/products/:id', catchAsync(async (req, res) => {
+router.delete('/products/:id',isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Product.findByIdAndDelete(id);
     res.redirect('/products');

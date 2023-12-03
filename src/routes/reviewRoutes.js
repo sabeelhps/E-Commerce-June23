@@ -12,6 +12,7 @@ router.post('/products/:id/reviews', catchAsync(async (req, res) => {
     product.reviews.push(review);
     await review.save();
     await product.save();
+    req.flash('success', 'Review created successfully!');
     res.redirect(`/products/${id}`);
 }));
 

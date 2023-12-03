@@ -27,11 +27,37 @@
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+                <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                  <% if(!currentUser){ %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/register">SignUp</a>
+                  </li>
+                  <% }else{ %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                  </li>
+                  <% } %>
+                </ul>
               </div>
             </div>
           </nav>
     </header>
     <main class="container">
+        <% if(success && success.length){ %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%=success%>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+        <% if(error && error.length){ %>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%=error%>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
         <%- body -%>
     </main>
     <footer></footer>
