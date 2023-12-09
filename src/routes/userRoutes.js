@@ -43,6 +43,6 @@ router.get('/logout', (req, res) => {
         req.flash('success', 'Tata bye bye!');
         return res.redirect('/products');
     });
-})
+});
 
 module.exports = router;
