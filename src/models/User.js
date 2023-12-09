@@ -1,6 +1,17 @@
 const { Schema, model } = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
+const cartSchema = new Schema({
+    _id: false,
+    name: String,
+    price: Number,
+    qty: {
+        type: Number,
+        default: 1
+    },
+    imageUrl: String
+});
+
 const userSchema = new Schema({
     // username, hash and salt are injected by passport local mongoose.
     email: {
@@ -9,7 +20,8 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: ['seller','buyer', 'admin']
-    }
+    },
+    cart: [cartSchema]
 },{versionKey: false, timestamps: true});
 
 userSchema.plugin(passportLocalMongoose);

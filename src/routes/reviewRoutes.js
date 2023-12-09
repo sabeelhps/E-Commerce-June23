@@ -3,8 +3,9 @@ const router = express.Router();
 const Review = require('../models/Review');
 const Product = require('../models/Product');
 const catchAsync = require('../core/catchAsync');
+const { isLoggedIn } = require('../middleware/auth');
 
-router.post('/products/:id/reviews', catchAsync(async (req, res) => {
+router.post('/products/:id/reviews', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const { rating, comment } = req.body;
     const review = new Review({ rating, comment });

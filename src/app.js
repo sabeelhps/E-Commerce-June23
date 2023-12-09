@@ -9,14 +9,27 @@ const flash = require('connect-flash');
 const LocalStrategy = require('passport-local');
 const passport = require('passport');
 const User = require('./models/User');
+const MongoStore = require('connect-mongo');
 
 //Routes
 const productRoutes = require('./routes/productRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const userRoutes = require('./routes/userRoutes');
 
+// Mongo Store to save sessions to database.
+
+console.log(process.env.MONGO_DATABASE_URL);
+
+const store = MongoStore.create({
+    mongoUrl: process.env.MONGO_DATABASE_URL,
+    touchAfter: 24 * 3600, // time period in seconds
+    autoRemove: 'native',
+    ttl: 14 * 24 * 60 * 60
+});
+
 const sessionConfig = {
-    secret: 'We need a better hidden secret',
+    store: store,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -25,6 +38,7 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');

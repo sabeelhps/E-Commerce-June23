@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/User');
 const catchAsync = require('../core/catchAsync');
 const passport = require('passport');
+const Product = require('../models/Product');
+const { isLoggedIn } = require('../middleware/auth');
 
 // router.get('/fakeUser',async(req, res) => {
 //     const user = new User({ username: 'Max', email: 'max@gmail.com' });
@@ -44,5 +46,14 @@ router.get('/logout', (req, res) => {
         return res.redirect('/products');
     });
 });
+
+router.post('/cart/:productId',isLoggedIn, catchAsync(async(req, res) => {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+    const currentUser = await User.findById(req.user._id);
+    currentUser.cart.push({ name: product.name, price: product.price, imageUrl: product.imageUrl });
+    await currentUser.save();
+    res.redirect(`/products/${productId}`);
+}))
 
 module.exports = router;

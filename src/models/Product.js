@@ -18,7 +18,11 @@ const productSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }
 }, {versionKey: false, timestamps: true});
 
 const Product = mongoose.model('Product', productSchema);
