@@ -47,13 +47,25 @@ router.get('/logout', (req, res) => {
     });
 });
 
-router.post('/cart/:productId',isLoggedIn, catchAsync(async(req, res) => {
+router.post('/cart/:productId', isLoggedIn, catchAsync(async (req, res) => {
     const { productId } = req.params;
     const product = await Product.findById(productId);
     const currentUser = await User.findById(req.user._id);
-    currentUser.cart.push({ name: product.name, price: product.price, imageUrl: product.imageUrl });
+    const existingCartItem = currentUser.cart.find((item) => item.productId.equals(product._id));
+    if (existingCartItem) {
+        existingCartItem.qty = existingCartItem.qty + 1;
+    } else {
+        currentUser.cart.push({ productId: product._id, name: product.name, price: product.price, imageUrl: product.imageUrl });
+    }
     await currentUser.save();
     res.redirect(`/products/${productId}`);
-}))
+}));
+
+router.get('/cart',isLoggedIn, catchAsync(async(req, res) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    const totalCartAmount = user.cart.reduce((total, item) => total + item.price * item.qty, 0);
+    res.render('users/cart', { totalCartAmount, cart: user.cart });
+}));
 
 module.exports = router;

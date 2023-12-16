@@ -17,9 +17,6 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 // Mongo Store to save sessions to database.
-
-console.log(process.env.MONGO_DATABASE_URL);
-
 const store = MongoStore.create({
     mongoUrl: process.env.MONGO_DATABASE_URL,
     touchAfter: 24 * 3600, // time period in seconds
@@ -75,6 +72,10 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     res.locals.currentUser = req.user;
     next();
+});
+
+app.get('/', (req, res) => {
+    res.render('home');
 });
 
 app.use(productRoutes);

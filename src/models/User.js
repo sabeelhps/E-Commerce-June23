@@ -1,10 +1,11 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, default: mongoose } = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const cartSchema = new Schema({
     _id: false,
     name: String,
     price: Number,
+    productId: mongoose.Schema.Types.ObjectId,
     qty: {
         type: Number,
         default: 1
