@@ -79,7 +79,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(productRoutes);
-app.use(reviewRoutes);
+app.use('/products',reviewRoutes);
 app.use(userRoutes);
 
 app.all('*',(req, res, next)=> next(new NotFoundError('You are requesting a wrong path.')))

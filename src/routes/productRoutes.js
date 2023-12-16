@@ -4,61 +4,38 @@ const Product = require('../models/Product');
 const catchAsync = require('../core/catchAsync');
 const { BadRequestError } = require('../core/ApiError');
 const { isLoggedIn, isProductAuthor } = require('../middleware/auth');
+const productController = require('../controllers/productController');
 
 // Get all products
-router.get('/products', catchAsync(async (req, res) => {
-    const products = await Product.find({});
-    res.render('products/index', { products });
-}));
+// router.get('/products', catchAsync(productController.getAllProducts));
 
 // Show new form
-router.get('/products/new',isLoggedIn, (req, res) => {
-    res.render('products/new');
-});
+// router.get('/products/new',isLoggedIn, productController.getNewProductsPage);
 
 // Create
-router.post('/products',isLoggedIn, catchAsync(async (req, res) => {
-    const { name, imageUrl, desc, price } = req.body;
-    const currentUser = req.user;
-    await Product.create({ name, imageUrl, desc, price, author: currentUser._id });
-    res.redirect('/products');
-}));
+// router.post('/products',isLoggedIn, catchAsync(productController.createNewProduct));
 
 // Show
-router.get('/products/:id',catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findById(id)
-        .populate('reviews');
-    if (!product) {
-        throw new BadRequestError(`Product with this id: ${id} doesn't exists.`);
-    }
-    res.render('products/show', { product });
-}));
+// router.get('/products/:id',catchAsync(productController.showProduct));
 
 // Write edit route yourself
 // edit route
-router.get('/products/:id/edit',isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    if (!product) {
-        throw new BadRequestError(`Product with this id: ${id} doesn't exists.`);
-    }
-    res.render('products/edit', { product });
-}));
+// router.get('/products/:id/edit',isLoggedIn, catchAsync(productController.showEditPage));
 
 // update
-router.patch('/products/:id', isLoggedIn, isProductAuthor, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const { name, price, desc, imageUrl } = req.body;
-    await Product.findByIdAndUpdate(id, { name, price, desc, imageUrl });
-    res.redirect(`/products/${id}`);
-}));
+// router.patch('/products/:id', isLoggedIn, isProductAuthor, catchAsync(productController.updateProduct));
 
 // Delete 
-router.delete('/products/:id',isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Product.findByIdAndDelete(id);
-    res.redirect('/products');
-}));
+// router.delete('/products/:id', isLoggedIn, catchAsync(productController.deleteProduct));
+
+router.route('/products')
+    .get('/', catchAsync(productController.getAllProducts))
+    .get('/new', productController.getNewProductsPage)
+    .post('/', isLoggedIn, catchAsync(productController.createNewProduct))
+    .get('/:id', catchAsync(productController.showProduct))
+    .get('/:id/edit', isLoggedIn, catchAsync(productController.showEditPage))
+    .patch('/:id', isLoggedIn, isProductAuthor, catchAsync(productController.updateProduct))
+    .delete('/:id', isLoggedIn, catchAsync(productController.deleteProduct));
+
 module.exports = router;
 
